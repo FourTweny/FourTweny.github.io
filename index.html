@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -89,79 +88,11 @@
                 <div class="chart-container">
                     <canvas id="agriChart"></canvas>
                 </div>
-=======
-<html>
-<head>
-    <title>My Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: sans-serif; margin: 20px; }
-        h1 { text-align: center; }
-        .dashboard-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px; /* Space between charts */
-            justify-content: center;
-        }
-        .chart-row {
-            display: flex;
-            width: 100%;
-            gap: 20px; /* Space between charts in a row */
-            margin-bottom: 20px;
-        }
-        .chart-container {
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-        .chart-container-50 { flex-basis: calc(50% - 10px); } /* 50% width minus half gap */
-        .chart-container-33 { flex-basis: calc(33.333% - 13.33px); } /* 33% width minus two-thirds gap */
-
-        /* Canvas styling */
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <h1>My Dashboard</h1>
-
-    <div class="dashboard-container">
-        <!-- Row 1 -->
-        <div class="chart-row">
-            <div class="chart-container chart-container-50">
-                <h2>CPU Usage (%)</h2>
-                <canvas id="cpuChart"></canvas>
-            </div>
-            <div class="chart-container chart-container-50">
-                <h2>Memory Usage (GB)</h2>
-                <canvas id="memoryChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="chart-row">
-            <div class="chart-container chart-container-33">
-                <h2>Disk Space</h2>
-                <canvas id="diskChart"></canvas>
-            </div>
-            <div class="chart-container chart-container-33">
-                <h2>Network Speed (Mbps)</h2>
-                <canvas id="networkChart"></canvas>
-            </div>
-            <div class="chart-container chart-container-33">
-                <h2>Active Users</h2>
-                <canvas id="usersChart"></canvas>
-
             </div>
         </div>
     </div>
 
     <script>
-
         // --- MOCK DATA & SIMULATION ---
 
         // Data structure to hold sensor information for different sites
@@ -232,7 +163,7 @@
                 duration: 500
             }
         };
-
+        
         // Function to initialize charts
         function initializeCharts() {
             const energyCtx = document.getElementById('energyChart').getContext('2d');
@@ -370,7 +301,7 @@
             energyChart.data.labels.push(data.time);
             energyChart.data.datasets[0].data.push(data.power);
             energyChart.data.datasets[1].data.push(data.irradiance);
-
+            
             agriChart.data.labels.push(data.time);
             agriChart.data.datasets[0].data.push(data.moisture);
             agriChart.data.datasets[1].data.push(data.airTemp);
@@ -378,7 +309,7 @@
             energyChart.update('none');
             agriChart.update('none');
         }
-
+        
         // Function to reset and populate charts for a new site
         function resetAndPopulateData(siteId) {
             // Clear existing data
@@ -395,14 +326,14 @@
                 energyChart.data.labels.push(pastTime);
                 energyChart.data.datasets[0].data.push(data.power);
                 energyChart.data.datasets[1].data.push(data.irradiance);
-
+                
                 agriChart.data.labels.push(pastTime);
                 agriChart.data.datasets[0].data.push(data.moisture);
                 agriChart.data.datasets[1].data.push(data.airTemp);
             }
             energyChart.update();
             agriChart.update();
-
+            
             // Do one immediate update for KPIs
             updateDashboard();
         }
@@ -410,7 +341,7 @@
         // Event listener for the site selector dropdown
         document.getElementById('site-selector').addEventListener('change', (event) => {
             currentSiteId = event.target.value;
-
+            
             // Stop the current interval
             clearInterval(dataUpdateInterval);
 
@@ -425,171 +356,6 @@
             resetAndPopulateData(currentSiteId);
             dataUpdateInterval = setInterval(updateDashboard, 2000);
         };
-    </script>
-
-=======
-        // Mock data for the charts
-        const mockCpuData = {
-            labels: ['0s', '10s', '20s', '30s', '40s', '50s', '60s'],
-            data: [10, 40, 20, 50, 30, 60, 25]
-        };
-        const mockMemoryData = {
-            labels: ['0s', '10s', '20s', '30s', '40s', '50s', '60s'],
-            data: [2.5, 3.0, 2.8, 3.5, 3.2, 3.8, 3.0] // GB
-        };
-        const mockDiskData = {
-            labels: ['Used', 'Free'],
-            data: [150, 350] // GB
-        };
-        const mockNetworkData = { // For Doughnut, as Gauge is not standard
-            labels: ['Upload', 'Download'], // Simplified for a doughnut
-            data: [50, 250] // Mbps
-        };
-        const mockUsersData = {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            data: [150, 230, 220, 200, 280, 300, 260]
-        };
-
-        // CPU Usage Chart (Line)
-        new Chart(document.getElementById('cpuChart'), {
-            type: 'line',
-            data: {
-                labels: mockCpuData.labels,
-                datasets: [{
-                    label: 'CPU Usage %',
-                    data: mockCpuData.data,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, max: 100 } }
-            }
-        });
-
-        // Memory Usage Chart (Bar)
-        new Chart(document.getElementById('memoryChart'), {
-            type: 'bar',
-            data: {
-                labels: mockMemoryData.labels,
-                datasets: [{
-                    label: 'Memory Usage (GB)',
-                    data: mockMemoryData.data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // Disk Space Chart (Doughnut)
-        new Chart(document.getElementById('diskChart'), {
-            type: 'doughnut',
-            data: {
-                labels: mockDiskData.labels,
-                datasets: [{
-                    label: 'Disk Space (GB)',
-                    data: mockDiskData.data,
-                    backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
-                    hoverOffset: 4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        // Network Speed Chart (Doughnut - as a stand-in for Gauge)
-        // A true gauge would require a custom plugin or a different library
-        new Chart(document.getElementById('networkChart'), {
-            type: 'doughnut',
-            data: {
-                labels: mockNetworkData.labels, // Or a single label if representing a single value
-                datasets: [{
-                    label: 'Network Speed (Mbps)',
-                    data: mockNetworkData.data, // Example: [currentSpeed, maxSpeed - currentSpeed] for a semi-circle
-                    backgroundColor: ['rgb(255, 205, 86)', 'rgb(201, 203, 207)'],
-                    hoverOffset: 4,
-                    circumference: 180, // For a semi-circle doughnut
-                    rotation: -90       // Start at the bottom
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                if (context.label === 'Upload' || context.label === 'Download') {
-                                     return `${context.label}: ${context.raw} Mbps`;
-                                }
-                                // For a single value gauge, you might want to show only the value
-                                // return `${context.raw} Mbps`; 
-                                return null;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        // A more accurate gauge might look like this:
-        // const networkSpeed = 120; // Current speed
-        // const maxNetworkSpeed = 300;
-        // new Chart(document.getElementById('networkChart'), {
-        //     type: 'doughnut',
-        //     data: {
-        //         labels: ['Current Speed', 'Remaining'],
-        //         datasets: [{
-        //             label: 'Network Speed (Mbps)',
-        //             data: [networkSpeed, maxNetworkSpeed - networkSpeed],
-        //             backgroundColor: ['rgb(255, 159, 64)', 'rgb(230, 230, 230)'],
-        //             circumference: 180, // Semi-circle
-        //             rotation: 270,      // Start from the left middle
-        //             borderWidth: 0,
-        //             cutout: '70%'
-        //         }]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         maintainAspectRatio: false,
-        //         plugins: {
-        //             legend: { display: false },
-        //             tooltip: { enabled: false },
-        //             title: { display: false }
-        //         },
-        //         animation: { animateRotate: false }
-        //     }
-        // });
-
-
-        // Active Users Chart (Polar Area)
-        new Chart(document.getElementById('usersChart'), {
-            type: 'polarArea',
-            data: {
-                labels: mockUsersData.labels,
-                datasets: [{
-                    label: 'Active Users',
-                    data: mockUsersData.data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 205, 86, 0.5)',
-                        'rgba(201, 203, 207, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(153, 102, 255, 0.5)',
-                        'rgba(255, 159, 64, 0.5)'
-                    ]
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
     </script>
 
 </body>
