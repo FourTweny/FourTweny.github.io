@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cost of Interrupted Work - Gloria Mark's Research</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ffe4e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+
+        .researcher-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .research-timeline {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .research-timeline::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        .timeline-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .year {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .question-box::before {
+            content: '?';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            color: #4facfe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .experiment-setup {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .setup-card {
+            background: #f8f9fa;
+            border: 2px solid #e2e8f0;
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .setup-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
+        }
+
+        .setup-icon {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .setup-title {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .setup-details {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .conditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .condition-card {
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .condition-baseline {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .condition-same {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .condition-different {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .condition-letter {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .condition-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .surprising-results {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2d3748;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .result-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .result-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-desc {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .findings-timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .findings-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #ff6b6b, #ee5a6f);
+            border-radius: 2px;
+        }
+
+        .finding-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .finding-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .finding-content {
+            width: 45%;
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .finding-item:nth-child(even) .finding-content {
+            margin-right: 10%;
+        }
+
+        .finding-item:nth-child(odd) .finding-content {
+            margin-left: 10%;
+        }
+
+        .finding-number {
+            font-weight: 800;
+            color: #ff6b6b;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .finding-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .finding-desc {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .finding-dot {
+            width: 25px;
+            height: 25px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+        }
+
+        .mechanism-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .speed-stress-cycle {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .cycle-step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .cycle-number {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: #4facfe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .personality-card {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .personality-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .personality-traits {
+            list-style: none;
+            padding: 0;
+        }
+
+        .personality-traits li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .personality-traits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .implications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .implication-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .implication-title {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .implication-desc {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .key-stats {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-big-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .stat-context {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .takeaways-list {
+            background: #f0f8ff;
+            border: 2px solid #667eea;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .takeaways-list h3 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .takeaway-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .takeaway-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .takeaway-text {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .takeaway-text strong {
+            color: #2d3748;
+        }
+
+        .conclusion-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-top: 60px;
+        }
+
+        .conclusion-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .conclusion-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+        }
+
+        .citation-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-style: italic;
+            text-align: center;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .findings-timeline::before {
+                left: 20px;
+            }
+
+            .finding-item {
+                flex-direction: column !important;
+            }
+
+            .finding-content {
+                width: 100% !important;
+                margin-left: 40px !important;
+                margin-right: 0 !important;
+            }
+
+            .finding-dot {
+                left: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>The Cost of Interrupted Work</h1>
+            <p>Gloria Mark's Groundbreaking Research on Workplace Interruptions</p>
+            <div class="researcher-info">
+                <strong>Dr. Gloria Mark</strong> - UC Irvine Department of Informatics<br>
+                <em>Published in Proceedings of CHI 2008</em>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Research Background</h2>
+            <div class="research-timeline">
+                <div class="timeline-content">
+                    <div class="year">2008</div>
+                    <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">
+                        Dr. Gloria Mark and her team published landmark research that fundamentally changed how we understand workplace interruptions.
+                    </p>
+                    <p style="text-align: center; opacity: 0.9;">
+                        Their study provided the first empirical evidence of what many knowledge workers intuitively felt: constant interruptions are taking a serious toll on both productivity and well-being.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Research Question</h2>
+            <div class="question-box">
+                <div class="question-title">Does the context of an interruption matter?</div>
+                <p>Mark's study aimed to resolve conflicting ideas about interruptions in the workplace. Previous research had produced mixed results—some studies suggested interruptions could be beneficial, while others described them as harmful.</p>
+            </div>
+
+            <div class="intro-text">
+                <strong>Specifically, the researchers wanted to understand:</strong>
+            </div>
+
+            <div class="experiment-setup">
+                <div class="setup-card">
+                    <div class="setup-icon">🎯</div>
+                    <div class="setup-title">Context Impact</div>
+                    <div class="setup-details">Whether interruptions related to your current task are less disruptive than unrelated ones</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">😰</div>
+                    <div class="setup-title">Stress Effects</div>
+                    <div class="setup-details">How interrupted work affects stress levels and mental state</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">👤</div>
+                    <div class="setup-title">Individual Factors</div>
+                    <div class="setup-details">What personality traits might influence how well people handle interruptions</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Experimental Design</h2>
+            <p class="intro-text">
+                The researchers created a controlled office environment in their lab and used a realistic email task. Participants played the role of human resource managers who had just returned from vacation.
+            </p>
+
+            <div class="experiment-setup">
+                <div class="setup-card">
+                    <div class="setup-icon">👥</div>
+                    <div class="setup-title">Participants</div>
+                    <div class="setup-details">
+                        <strong>48 individuals</strong><br>
+                        • 81% German university students<br>
+                        • Average age: 26<br>
+                        • 15 males, 33 females<br>
+                        • All experienced email users
+                    </div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">📧</div>
+                    <div class="setup-title">Task</div>
+                    <div class="setup-details">
+                        Process <strong>12 emails per condition</strong><br>
+                        • As quickly and accurately as possible<br>
+                        • Human resources context<br>
+                        • Fact sheet provided for reference<br>
+                        • Equal difficulty across conditions
+                    </div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">⏰</div>
+                    <div class="setup-title">Interruptions</div>
+                    <div class="setup-details">
+                        <strong>Every 2 minutes</strong><br>
+                        • Based on real workplace observations<br>
+                        • Via phone or instant message<br>
+                        • Participants must respond immediately<br>
+                        • Equal duration across conditions
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Three Experimental Conditions</h2>
+            <div class="conditions-grid">
+                <div class="condition-card condition-baseline">
+                    <div class="condition-letter">B</div>
+                    <div class="condition-title">Baseline</div>
+                    <p>No interruptions - participants could focus entirely on processing emails</p>
+                </div>
+                <div class="condition-card condition-same">
+                    <div class="condition-letter">S</div>
+                    <div class="condition-title">Same-Context</div>
+                    <p>Interruptions with questions related to human resources (matching their email task)</p>
+                </div>
+                <div class="condition-card condition-different">
+                    <div class="condition-letter">D</div>
+                    <div class="condition-title">Different-Context</div>
+                    <p>Interruptions with random, unrelated questions (like planning a company party)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="surprising-results">
+                <h2 style="margin-bottom: 30px; font-size: 2.5rem;">🤯 The Surprising Results</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 40px;">
+                    The findings overturned conventional wisdom about interruptions and revealed unexpected patterns in human behavior.
+                </p>
+            </div>
+
+            <div class="findings-timeline">
+                <div class="finding-item">
+                    <div class="finding-content">
+                        <div class="finding-number">Finding #1</div>
+                        <div class="finding-title">Context Doesn't Matter</div>
+                        <div class="finding-desc">
+                            The most surprising discovery: <strong>the context of interruptions made no difference</strong>. Whether the interruption was related to the current task or completely random, the disruption cost was identical.
+                        </div>
+                    </div>
+                    <div class="finding-dot"></div>
+                </div>
+
+                <div class="finding-item">
+                    <div class="finding-content">
+                        <div class="finding-number">Finding #2</div>
+                        <div class="finding-title">People Work Faster When Interrupted</div>
+                        <div class="finding-desc">
+                            Contrary to expectations, participants actually completed interrupted tasks <strong>faster</strong> than uninterrupted ones. The baseline (no interruption) condition took the longest time to complete.
+                        </div>
+                    </div>
+                    <div class="finding-dot"></div>
+                </div>
+
+                <div class="finding-item">
+                    <div class="finding-content">
+                        <div class="finding-number">Finding #3</div>
+                        <div class="finding-title">Speed Comes at a Price</div>
+                        <div class="finding-desc">
+                            While people worked faster when interrupted, this came with <strong>significant psychological costs</strong>: increased stress, frustration, time pressure, and mental effort.
+                        </div>
+                    </div>
+                    <div class="finding-dot"></div>
+                </div>
+
+                <div class="finding-item">
+                    <div class="finding-content">
+                        <div class="finding-number">Finding #4</div>
+                        <div class="finding-title">Quality Remained Intact</div>
+                        <div class="finding-desc">
+                            Despite working faster and feeling more stressed, participants maintained the <strong>same quality of work</strong>. No significant differences in errors, politeness, or accuracy.
+                        </div>
+                    </div>
+                    <div class="finding-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Key Statistics</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-number">22.77</div>
+                    <div class="result-label">Baseline Minutes</div>
+                    <div class="result-desc">Time to complete task without interruptions</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">20.31</div>
+                    <div class="result-label">Same-Context Minutes</div>
+                    <div class="result-desc">Time with related interruptions</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">20.60</div>
+                    <div class="result-label">Different-Context Minutes</div>
+                    <div class="result-desc">Time with unrelated interruptions</div>
+                </div>
+                <div class="result-card pulse-animation">
+                    <div class="result-number">+67%</div>
+                    <div class="result-label">Stress Increase</div>
+                    <div class="result-desc">Higher stress with interruptions</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">+41%</div>
+                    <div class="result-label">Frustration Rise</div>
+                    <div class="result-desc">Increased frustration levels</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">+25%</div>
+                    <div class="result-label">Time Pressure</div>
+                    <div class="result-desc">More perceived time pressure</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Psychological Mechanism</h2>
+            <div class="mechanism-box">
+                <h3 style="text-align: center; margin-bottom: 20px; font-size: 1.8rem;">The Speed-Stress Spiral</h3>
+                <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">
+                    Mark's research revealed a fascinating adaptation strategy: when people expect to be interrupted, they develop a compensatory working mode.
+                </p>
+
+                <div class="speed-stress-cycle">
+                    <div class="cycle-step">
+                        <div class="cycle-number">1</div>
+                        <h4>Anticipate Interruptions</h4>
+                        <p>People expect to be disrupted during work</p>
+                    </div>
+                    <div class="cycle-step">
+                        <div class="cycle-number">2</div>
+                        <h4>Work Faster</h4>
+                        <p>They compensate by increasing their work pace</p>
+                    </div>
+                    <div class="cycle-step">
+                        <div class="cycle-number">3</div>
+                        <h4>Create Stress</h4>
+                        <p>Increased pace creates psychological stress</p>
+                    </div>
+                    <div class="cycle-step">
+                        <div class="cycle-number">4</div>
+                        <h4>Cycle Continues</h4>
+                        <p>The pattern repeats, building cumulative stress</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Individual Differences: Who Handles Interruptions Better?</h2>
+            <p class="intro-text">
+                The study uncovered important personality factors that influence interruption tolerance.
+            </p>
+
+            <div class="personality-grid">
+                <div class="personality-card">
+                    <div class="personality-title">🌟 Openness to Experience</div>
+                    <p style="margin-bottom: 20px;">People who scored higher on "openness to experience" handled interrupted work more efficiently.</p>
+                    <strong>These individuals are better at:</strong>
+                    <ul class="personality-traits">
+                        <li>Adapting quickly to new situations</li>
+                        <li>Handling unexpected tasks</li>
+                        <li>Reorienting back to original work faster</li>
+                    </ul>
+                </div>
+                <div class="personality-card">
+                    <div class="personality-title">📋 Need for Personal Structure</div>
+                    <p style="margin-bottom: 20px;">Surprisingly, people with a <strong>higher</strong> need for personal structure also performed better with interruptions.</p>
+                    <strong>These individuals are better at:</strong>
+                    <ul class="personality-traits">
+                        <li>Managing their time when disrupted</li>
+                        <li>Organizing work around interruptions</li>
+                        <li>Creating mental frameworks to cope</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Real-World Implications</h2>
+            <div class="key-stats">
+                <h3 style="text-align: center; margin-bottom: 30px; font-size: 1.8rem;">⚠️ The 20-Minute Warning</h3>
+                <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">
+                    After just 20 minutes of interrupted work, participants reported significantly higher stress, frustration, and mental effort.
+                </p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-big-number">11</div>
+                        <div class="stat-context">minutes between interruptions in real workplaces</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-big-number">23</div>
+                        <div class="stat-context">minutes to fully refocus after interruption</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-big-number">20</div>
+                        <div class="stat-context">minutes to show measurable stress effects</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="implications-grid">
+                <div class="implication-card">
+                    <div class="implication-title">🔄 The Productivity Paradox</div>
+                    <div class="implication-desc">
+                        While people can work faster when interrupted, this speed comes at the cost of increased stress, higher mental workload, greater time pressure, and more physical and emotional effort.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">💻 System Design Insights</div>
+                    <div class="implication-desc">
+                        Technology should help track and control interruptions over time, provide individual customization based on personality differences, and give people visibility into their interruption patterns.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">🧠 Cognitive Load Management</div>
+                    <div class="implication-desc">
+                        Any discontinuity in work creates cognitive costs. Anticipation of interruption changes how people work, and short-term adaptation doesn't eliminate long-term psychological costs.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Study Limitations & Context</h2>
+            <div class="experiment-setup">
+                <div class="setup-card">
+                    <div class="setup-icon">🏢</div>
+                    <div class="setup-title">Laboratory Setting</div>
+                    <div class="setup-details">May not fully replicate real workplace conditions and social dynamics</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">📧</div>
+                    <div class="setup-title">Task Specificity</div>
+                    <div class="setup-details">Email task may not represent all types of knowledge work and cognitive demands</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">⏱️</div>
+                    <div class="setup-title">Time Frame</div>
+                    <div class="setup-details">Short-term effects (20 minutes) may not predict long-term adaptation patterns</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-icon">🌍</div>
+                    <div class="setup-title">Cultural Factors</div>
+                    <div class="setup-details">German university student population may limit generalizability to other cultures</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="takeaways-list">
+                <h3>🎯 Key Takeaways for Modern Workers</h3>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">1</div>
+                    <div class="takeaway-text">
+                        <strong>All interruptions have costs</strong> - it doesn't matter if they're related to your work or not. Any break in focus creates cognitive disruption.
+                    </div>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">2</div>
+                    <div class="takeaway-text">
+                        <strong>Speed compensation is real</strong> - you can work faster when interrupted, but you'll pay a psychological price in stress and mental effort.
+                    </div>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">3</div>
+                    <div class="takeaway-text">
+                        <strong>Stress accumulates quickly</strong> - even 20 minutes of interrupted work significantly increases stress, frustration, and time pressure.
+                    </div>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">4</div>
+                    <div class="takeaway-text">
+                        <strong>Individual differences matter</strong> - your personality affects how well you handle interruptions. Openness and structure preference both help.
+                    </div>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">5</div>
+                    <div class="takeaway-text">
+                        <strong>System-level solutions are needed</strong> - personal willpower alone isn't enough. We need tools and strategies to manage interruption costs.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">The Broader Scientific Context</h2>
+            <p class="intro-text">
+                Mark's research built on extensive fieldwork and provided the missing experimental evidence for productivity strategies.
+            </p>
+
+            <div class="key-stats">
+                <h3 style="text-align: center; margin-bottom: 20px;">🔬 Research Foundation</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-big-number">1st</div>
+                        <div class="stat-context">rigorous experimental study on interruption context effects</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-big-number">3x2</div>
+                        <div class="stat-context">factorial experimental design with counterbalanced conditions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-big-number">6</div>
+                        <div class="stat-context">different measures: time, errors, stress, frustration, effort, workload</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-big-number">2</div>
+                        <div class="stat-context">personality factors identified as significant predictors</div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <p style="text-align: center; font-size: 1.1rem;">
+                        <strong>Mark's controlled experiments confirmed field observations:</strong><br>
+                        Knowledge workers are interrupted every 11 minutes and need 23 minutes to fully refocus, creating a cycle of perpetual distraction in modern workplaces.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Applications to Modern Productivity Systems</h2>
+            <p class="intro-text">
+                Mark's findings provide the scientific foundation for productivity strategies like day theming, batching, and focused work periods.
+            </p>
+
+            <div class="implications-grid">
+                <div class="implication-card">
+                    <div class="implication-title">📅 Day Theming</div>
+                    <div class="implication-desc">
+                        Grouping similar tasks reduces context switching costs. Since all interruptions are equally disruptive, protecting entire blocks of time becomes crucial.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">⏰ Batching Strategies</div>
+                    <div class="implication-desc">
+                        Processing emails, messages, and calls in dedicated blocks prevents the speed-stress spiral from occurring throughout the day.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">🔕 Notification Management</div>
+                    <div class="implication-desc">
+                        Since anticipation of interruption changes how people work, controlling when interruptions can occur is essential for maintaining focus.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">🎯 Deep Work Periods</div>
+                    <div class="implication-desc">
+                        Protecting uninterrupted time allows for the natural working pace without the psychological costs of speed compensation.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">👤 Personal Customization</div>
+                    <div class="implication-desc">
+                        Individual differences in openness and structure preference suggest that interruption management strategies should be personalized.
+                    </div>
+                </div>
+                <div class="implication-card">
+                    <div class="implication-title">📊 Stress Monitoring</div>
+                    <div class="implication-desc">
+                        Since stress accumulates quickly with interruptions, tracking and managing psychological load becomes as important as task completion.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="conclusion-section">
+            <h2 class="conclusion-title">The Revolutionary Impact</h2>
+            <p class="conclusion-text">
+                Gloria Mark's research provided the first rigorous scientific evidence of something many workers experience daily: interruptions exact a real cost on our mental well-being, even when we can maintain productivity.
+            </p>
+
+            <div class="citation-box">
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">
+                    <strong>"Our most profound insight: our brains are remarkably adaptable, capable of working faster when interrupted, but this adaptation comes with an invisible tax of increased stress and mental effort."</strong>
+                </p>
+                <p>Understanding this trade-off is crucial for anyone seeking to optimize their work environment and mental health in our increasingly connected world.</p>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 15px; margin: 30px 0;">
+                <h3 style="margin-bottom: 20px; font-size: 1.5rem;">🔬 Research Impact</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left;">
+                    <div>
+                        <h4>Scientific Foundation</h4>
+                        <p>Established empirical basis for productivity strategies</p>
+                    </div>
+                    <div>
+                        <h4>System Design</h4>
+                        <p>Informed development of interruption management tools</p>
+                    </div>
+                    <div>
+                        <h4>Workplace Policy</h4>
+                        <p>Supported focused work time and batching strategies</p>
+                    </div>
+                    <div>
+                        <h4>Individual Awareness</h4>
+                        <p>Helped workers understand their own interruption costs</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="conclusion-text">
+                Mark's work laid the foundation for understanding why focused work time is so valuable and why interruption management systems can be so effective. It transformed "productivity hacks" into evidence-based strategies for human well-being.
+            </p>
+
+            <div class="citation-box">
+                <strong>Citation:</strong><br>
+                Mark, G., Gudith, D., & Klocke, U. (2008). The cost of interrupted work: more speed and stress. <em>Proceedings of CHI 2008</em>, 107-110.<br>
+                UC Irvine Department of Informatics & Humboldt University Berlin
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add hover effects and animations
+        document.querySelectorAll('.result-card, .setup-card, .condition-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animate numbers counting up
+        function animateNumber(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+
+            function updateNumber() {
+                start += increment;
+                if (start < target) {
+                    if (target < 1) {
+                        element.textContent = start.toFixed(2);
+                    } else {
+                        element.textContent = Math.floor(start);
+                    }
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    if (target < 1) {
+                        element.textContent = target.toFixed(2);
+                    } else {
+                        element.textContent = target;
+                    }
+                }
+            }
+            updateNumber();
+        }
+
+        // Trigger number animations when visible
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numberElements = entry.target.querySelectorAll('.result-number, .stat-big-number');
+                    numberElements.forEach(numberElement => {
+                        if (!numberElement.hasAttribute('data-animated')) {
+                            numberElement.setAttribute('data-animated', 'true');
+                            const numberText = numberElement.textContent;
+                            const number = parseFloat(numberText.replace(/[^\d.]/g, ''));
+
+                            if (number) {
+                                numberElement.textContent = '0';
+                                setTimeout(() => {
+                                    animateNumber(numberElement, number);
+                                }, 300);
+                            }
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.result-card, .stat-item').forEach(card => {
+            statObserver.observe(card);
+        });
+
+        // Add subtle parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.3;
+            document.body.style.backgroundPosition = `center ${rate}px`;
+        });
+
+        // Add click interactions for takeaway items
+        document.querySelectorAll('.takeaway-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.backgroundColor = '#e6f3ff';
+                setTimeout(() => {
+                    this.style.backgroundColor = 'white';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
