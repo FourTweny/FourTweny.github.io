@@ -359,11 +359,11 @@ cd ~/agri-db</code></pre>
     container_name: timescale
     restart: always
     environment:
-      POSTGRES_USER: saiamc
-      POSTGRES_PASSWORD: Saiamc2025
-      POSTGRES_DB: AgriPVDB
+      POSTGRES_USER: *****
+      POSTGRES_PASSWORD: *****
+      POSTGRES_DB: *****
     ports:
-      - "5432:5432"
+      - *****
     volumes:
       - timescale-data:/var/lib/postgresql/data
     networks:
@@ -395,11 +395,11 @@ cd ~/agri-db</code></pre>
     environment:
       MQTT_BROKER: mosquitto
       MQTT_PORT: 1883
-      DB_HOST: timescaledb
-      DB_PORT: 5432
-      DB_NAME: AgriPVDB
-      DB_USER: saiamc
-      DB_PASSWORD: Saiamc2025
+      DB_HOST: *****
+      DB_PORT: *****
+      DB_NAME: *****
+      DB_USER: *****
+      DB_PASSWORD: *****
     networks:
       - iot-network
 
