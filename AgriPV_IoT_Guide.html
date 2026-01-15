@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriPV IoT Guide: MQTT & TimescaleDB</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f9fafb;
+      color: #22223b;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0 0 6rem 0;
+    }
+    header {
+      background-color: #283593;
+      color: #fff;
+      padding: 2rem 1rem 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px #1111;
+    }
+    header h1 {
+      margin-bottom: .3em;
+      font-size: 2.3rem;
+      letter-spacing: .01em;
+    }
+    header p {
+      margin-top: 0.5em;
+      font-size: 1.2rem;
+      color: #cfd8dc;
+    }
+    nav {
+      background: #eee;
+      box-shadow: 0 1px 0 #ddd;
+      padding: .5rem .5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: #283593;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0 0.8rem;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 2px;
+    }
+    nav a:hover, nav a.active {
+      color: #00bcd4;
+      border-bottom: 2px solid #00bcd4;
+    }
+    main {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      background: #fff;
+      padding: 3rem 2.5rem 3.5rem 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px #0001;
+    }
+    h2 {
+      color: #283593;
+      margin-top: 3.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 2.2rem;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      color: #325583;
+      margin-top: 2.2rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    h4 {
+      color: #4a5f8f;
+      margin-top: 1.8rem;
+      margin-bottom: 0.9rem;
+      font-size: 1.08rem;
+      font-weight: 600;
+    }
+    .code-block-wrapper {
+      position: relative;
+      margin: 1.2em 0 1.4em 0;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.6em;
+      right: 0.8em;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 0.5em 0.9em;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 600;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .copy-btn:hover {
+      background: #0097a7;
+    }
+    .copy-btn.copied {
+      background: #4caf50;
+    }
+    pre, code, kbd {
+      font-family: "Fira Mono", "Consolas", monospace;
+      background: #f7f8fa;
+      color: #064273;
+      border-radius: 5px;
+      padding: 0.13em 0.5em;
+      font-size: 1em;
+    }
+    pre {
+      padding: 1.4em;
+      background: #f4f5fa;
+      overflow-x: auto;
+      margin: 0;
+      border-left: 4px solid #00bcd4;
+      line-height: 1.65;
+      border-radius: 6px;
+    }
+    .collapsible {
+      background-color: #e3ebf6;
+      color: #283593;
+      cursor: pointer;
+      padding: 1.2em 1.6em 1.2em 2em;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 1.15em;
+      font-weight: 600;
+      margin-top: 2.8em;
+      margin-bottom: 0.8em;
+      border-radius: 7px;
+      position: relative;
+      transition: background .18s linear;
+      box-shadow: 0 1px 2px #2233;
+    }
+    .collapsible:after {
+      content: '+';
+      color: #00bcd4;
+      position: absolute;
+      right: 1.4em;
+      font-weight: 600;
+      font-size: 1.3em;
+      top: 52%;
+      transform: translateY(-50%);
+    }
+    .collapsible.active:after {
+      content: "-";
+    }
+    .content {
+      padding: 1.6em 1.6em 1.6em 1.8em;
+      display: none;
+      background: #f9fafd;
+      margin-bottom: 2em;
+      border-radius: 6px;
+      line-height: 1.75;
+      border: 1px solid #e0e8f0;
+    }
+    .content.open {
+      display: block;
+    }
+    .tip {
+      border-left: 5px solid #00bcd4;
+      background: #ebfaef;
+      margin: 1.8em 0;
+      padding: 1.2em 1.6em;
+      border-radius: 6px;
+      color: #346e38;
+      font-size: 1.05em;
+      font-style: italic;
+      line-height: 1.7;
+    }
+    .warning {
+      border-left: 5px solid #ff9800;
+      background: #fff8e1;
+      margin: 1.8em 0;
+      padding: 1.2em 1.6em;
+      border-radius: 6px;
+      color: #e65100;
+      font-size: 1.05em;
+      line-height: 1.7;
+    }
+    .important {
+      border-left: 5px solid #f44336;
+      background: #ffebee;
+      margin: 1.8em 0;
+      padding: 1.2em 1.6em;
+      border-radius: 6px;
+      color: #c62828;
+      font-size: 1.05em;
+      line-height: 1.7;
+    }
+    @media (max-width: 900px) {
+      main {
+        max-width: 95%;
+        padding: 2rem 1.5rem 2.5rem 1.5rem;
+      }
+      h2 { font-size: 1.8rem; margin-top: 2.5rem; }
+      pre { padding: 1.1em; font-size: 0.95em; }
+      nav a { margin: 0 0.5rem; font-size: 0.85rem; }
+    }
+    @media (max-width: 700px) {
+      main { padding: 1rem .6rem 2rem .6rem; }
+      header { padding: 1.4rem 0.7rem 1.3rem 0.7rem; }
+      nav { padding: 0.4rem 0.1rem; font-size: 0.9em; }
+      h2 { font-size: 1.3rem; margin-top: 2rem; }
+      pre { padding: 0.9em; font-size: 0.9em; }
+      .collapsible { padding: 1em 1.2em 1em 1.6em; font-size: 1em; }
+      .copy-btn { padding: 0.4em 0.7em; font-size: 0.8em; }
+    }
+    footer {
+      font-size: 0.96em;
+      color: #8788bc;
+      text-align: center;
+      margin: 3rem 0 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Complete Guide: MQTT &amp; TimescaleDB for IoT AgriPV</h1>
+    <p>A modern, step-by-step guide for setting up an energy/agriculture IoT stack with Mosquitto, TimescaleDB, and Python.</p>
+  </header>
+
+  <nav>
+    <a href="#intro">Introduction</a>
+    <a href="#setup">Installation</a>
+    <a href="#structure">Project Structure</a>
+    <a href="#mosquitto">Mosquitto</a>
+    <a href="#microservice">Microservice</a>
+    <a href="#run">Startup</a>
+    <a href="#db">Database</a>
+    <a href="#testdata">Test Data</a>
+    <a href="#testsystem">Test System</a>
+    <a href="#advanced">Advanced</a>
+    <a href="#commands">Commands</a>
+    <a href="#topics">Topics</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+    <a href="#conclusion">Conclusion</a>
+  </nav>
+
+  <main>
+    <h2 id="intro">1. Introduction</h2>
+    <p>
+      This guide details the full installation and configuration of an IoT system for the AgriPV project, using:
+    </p>
+    <ul>
+      <li><strong>Mosquitto</strong> MQTT broker for sensor communication</li>
+      <li><strong>TimescaleDB</strong> (built on PostgreSQL) for time-series data</li>
+      <li><strong>Python microservice</strong> for data ingestion and processing</li>
+    </ul>
+    <div class="tip">Tip: All code blocks have copy buttons. Click them to copy commands directly to your clipboard.</div>
+    
+    <div class="important">
+      <strong>Important Naming Convention:</strong> This guide uses <strong>snake_case</strong> for all database tables, columns, and JSON keys (e.g., raw_sensor_data</code>, sensor_id</code>, raw_value</code>). Ensure consistency throughout to avoid errors.
+    </div>
+
+    <h3>System Architecture</h3>
+    <ul>
+      <li><strong>IoT Sensors</strong> publish on MQTT topics</li>
+      <li><strong>Mosquitto Broker</strong> (port 1883) distributes messages</li>
+      <li><strong>mqtt-processor (Python)</strong> inserts data into TimescaleDB (port 5432)</li>
+    </ul>
+
+    <h2 id="setup">2. Basic Installation and Configuration</h2>
+    <button type="button" class="collapsible">Show All Installation Steps</button>
+    <div class="content">
+
+      <h3>2.1 Prepare the Raspberry Pi</h3>
+      <p><strong>Update the system:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo apt update
+sudo apt upgrade -y</code></pre>
+      </div>
+
+      <h3>2.2 Install Docker</h3>
+
+      <h4>2.2.1 Install required dependencies</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo apt install ca-certificates curl gnupg lsb-release -y</code></pre>
+      </div>
+
+      <h4>2.2.2 Add Docker GPG Key</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</code></pre>
+      </div>
+
+      <h4>2.2.3 Add Docker repository</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null</code></pre>
+      </div>
+
+      <h4>2.2.4 Install Docker Engine</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y</code></pre>
+      </div>
+
+      <h4>2.2.5 Restart Docker and verify version</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo systemctl restart docker
+sudo docker --version</code></pre>
+      </div>
+
+      <h4>2.2.6 Test installation</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker run hello-world</code></pre>
+      </div>
+
+      <h3>2.3 Install MQTT Tools</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo apt install mosquitto-clients -y</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="structure">3. Project Structure Creation</h2>
+    <button type="button" class="collapsible">Show Project Setup</button>
+    <div class="content">
+
+      <h3>3.1 Create main directory</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>mkdir ~/agri-db
+cd ~/agri-db</code></pre>
+      </div>
+
+      <h3>3.2 Create docker-compose.yml</h3>
+      <p><strong>Create and edit the docker-compose.yml file:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>nano ~/agri-db/docker-compose.yml</code></pre>
+      </div>
+      <p><strong>Paste the following content:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>services:
+  # Database: TimescaleDB
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: timescale
+    restart: always
+    environment:
+      POSTGRES_USER: saiamc
+      POSTGRES_PASSWORD: Saiamc2025
+      POSTGRES_DB: AgriPVDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale-data:/var/lib/postgresql/data
+    networks:
+      - iot-network
+
+  # Broker: Mosquitto
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: always
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - iot-network
+
+  # Microservice: Python for MQTT -> TimescaleDB
+  mqtt-processor:
+    build: ./mqtt-processor
+    container_name: mqtt-processor
+    restart: always
+    depends_on:
+      - timescaledb
+      - mosquitto
+    environment:
+      MQTT_BROKER: mosquitto
+      MQTT_PORT: 1883
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: AgriPVDB
+      DB_USER: saiamc
+      DB_PASSWORD: Saiamc2025
+    networks:
+      - iot-network
+
+networks:
+  iot-network:
+    driver: bridge
+
+volumes:
+  timescale-data:</code></pre>
+      </div>
+      <p><em>Save with Ctrl+O, Enter, Ctrl+X</em></p>
+
+    </div>
+
+    <h2 id="mosquitto">4. Mosquitto Configuration</h2>
+    <button type="button" class="collapsible">Show Mosquitto Setup</button>
+    <div class="content">
+
+      <h3>4.1 Create configuration directories and files</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+mkdir -p mosquitto/config mosquitto/data mosquitto/log
+nano ~/agri-db/mosquitto/config/mosquitto.conf</code></pre>
+      </div>
+
+      <p><strong>Paste the following configuration content:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>listener 1883 0.0.0.0
+allow_anonymous true
+persistence true
+persistence_location /mosquitto/data/
+log_dest file /mosquitto/log/mosquitto.log
+log_dest stdout</code></pre>
+      </div>
+      <p><em>Save with Ctrl+O, Enter, Ctrl+X</em></p>
+
+    </div>
+
+    <h2 id="microservice">5. Python Microservice Creation</h2>
+    <button type="button" class="collapsible">Show Microservice Setup</button>
+    <div class="content">
+
+      <h3>5.1 Create the microservice directory</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+mkdir -p mqtt-processor
+cd ~/agri-db/mqtt-processor</code></pre>
+      </div>
+
+      <h3>5.2 Create Dockerfile</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>nano ~/agri-db/mqtt-processor/Dockerfile</code></pre>
+      </div>
+      <p><strong>Paste the following content:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD ["python", "-u", "processor.py"]</code></pre>
+      </div>
+      <p><em>Save with Ctrl+O, Enter, Ctrl+X</em></p>
+
+      <h3>5.3 Create requirements.txt</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>nano ~/agri-db/mqtt-processor/requirements.txt</code></pre>
+      </div>
+      <p><strong>Paste the following content:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>paho-mqtt==1.6.1
+psycopg2-binary==2.9.9
+python-dateutil==2.8.2</code></pre>
+      </div>
+      <p><em>Save with Ctrl+O, Enter, Ctrl+X</em></p>
+
+      <h3>5.4 Create processor.py</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>nano ~/agri-db/mqtt-processor/processor.py</code></pre>
+      </div>
+      
+      <div class="important">
+        <strong>Critical:</strong> The table name raw_sensor_data</code> and all JSON keys (e.g., sensor_id</code>, raw_value</code>) must use <strong>snake_case</strong> to match the SQL schema exactly.
+      </div>
+
+      <p><strong>Paste the following Python code:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>import os
+import json
+import time
+from datetime import datetime
+
+import paho.mqtt.client as mqtt
+import psycopg2
+
+
+# Configuration from environment variables
+MQTT_BROKER = os.getenv("MQTT_BROKER", "mosquitto")
+MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
+
+DB_HOST = os.getenv("DB_HOST", "timescaledb")
+DB_PORT = int(os.getenv("DB_PORT", "5432"))
+DB_NAME = os.getenv("DB_NAME", "AgriPVDB")
+DB_USER = os.getenv("DB_USER", "saiamc")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Saiamc2025")
+
+
+def get_db_connection():
+    """Create and return a PostgreSQL connection."""
+    try:
+        conn = psycopg2.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+        )
+        print(f"Connected to database {DB_NAME}", flush=True)
+        return conn
+    except Exception as exc:
+        print(f"Database connection error: {exc}", flush=True)
+        return None
+
+
+def insert_raw_sensor_data(conn, data):
+    """
+    Insert a raw sensor data point into raw_sensor_data table.
+
+    Expected JSON payload keys (snake_case):
+      sensor_id, raw_value, corrected_value, acquisition_time, data_quality, validation_flags
+    """
+    try:
+        cursor = conn.cursor()
+        # IMPORTANT: Table and column names must match SQL schema exactly
+        query = """
+            INSERT INTO raw_sensor_data
+                (sensor_id, raw_value, corrected_value,
+                 acquisition_time, data_quality,
+                 validation_flags, received_time)
+            VALUES (%s, %s, %s, %s, %s, %s, NOW());
+        """
+
+        # Extract values using snake_case keys
+        sensor_id = data.get("sensor_id")
+        raw_value = data.get("raw_value")
+        corrected_value = data.get("corrected_value")
+        acquisition_time = data.get("acquisition_time", datetime.utcnow().isoformat())
+        data_quality = data.get("data_quality", "good")
+        validation_flags = json.dumps(data.get("validation_flags", {}))
+
+        cursor.execute(
+            query,
+            (
+                sensor_id,
+                raw_value,
+                corrected_value,
+                acquisition_time,
+                data_quality,
+                validation_flags,
+            ),
+        )
+        conn.commit()
+        cursor.close()
+        print(f"Inserted sensor data for {sensor_id}", flush=True)
+    except Exception as exc:
+        print(f"Error inserting sensor data: {exc}", flush=True)
+        conn.rollback()
+
+
+def on_connect(client, userdata, flags, rc):
+    """MQTT on_connect callback."""
+    if rc == 0:
+        print(f"Connected to MQTT broker {MQTT_BROKER}", flush=True)
+        client.subscribe("agripv/#")
+        print("Subscribed to all agripv/# topics", flush=True)
+    else:
+        print(f"MQTT connection failed with code {rc}", flush=True)
+
+
+def on_message(client, userdata, msg):
+    """MQTT on_message callback."""
+    topic = msg.topic
+    try:
+        payload = json.loads(msg.payload.decode())
+        print(f"Message received on {topic}", flush=True)
+
+        conn = userdata.get("db_conn")
+        if conn is None:
+            print("No DB connection, ignoring message", flush=True)
+            return
+
+        # Currently only handles topics ending in /raw
+        # Topics like /heartbeat and /error are received but not processed
+        if "/sensors/" in topic and topic.endswith("/raw"):
+            insert_raw_sensor_data(conn, payload)
+
+    except json.JSONDecodeError:
+        print(f"JSON decode error on topic {topic}", flush=True)
+    except Exception as exc:
+        print(f"Error handling message on {topic}: {exc}", flush=True)
+
+
+def main():
+    print("Waiting for services to start...", flush=True)
+    time.sleep(10)
+
+    db_conn = get_db_connection()
+    if not db_conn:
+        print("Unable to connect to DB, exiting.", flush=True)
+        return
+
+    client = mqtt.Client(userdata={"db_conn": db_conn})
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    try:
+        client.connect(MQTT_BROKER, MQTT_PORT, keepalive=60)
+        print("Microservice started", flush=True)
+        client.loop_forever()
+    except Exception as exc:
+        print(f"MQTT connection error: {exc}", flush=True)
+    finally:
+        db_conn.close()
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+      </div>
+      <p><em>Save with Ctrl+O, Enter, Ctrl+X</em></p>
+
+      <div class="warning">
+        <strong>Note:</strong> The current script only processes messages on topics ending in /raw</code>. Messages on /heartbeat</code> or /error</code> topics will be received but ignored. To handle those, you would need to add additional elif</code> blocks and corresponding database tables.
+      </div>
+
+    </div>
+
+    <h2 id="run">6. System Startup</h2>
+    <button type="button" class="collapsible">Show Startup Instructions</button>
+    <div class="content">
+
+      <h3>6.1 Return to main directory</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db</code></pre>
+      </div>
+
+      <h3>6.2 Build and start all services</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose build --no-cache
+sudo docker compose up -d</code></pre>
+      </div>
+
+      <div class="important">
+        <strong>Important:</strong> If you ever modify processor.py</code>, you <strong>must rebuild</strong> the container for changes to take effect:
+        <pre>cd ~/agri-db
+sudo docker compose up -d --build mqtt-processor</code></pre>
+      </div>
+
+      <h3>6.3 Verify everything works</h3>
+      <p><strong>Check the container status:</strong></p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose ps</code></pre>
+      </div>
+      <p>You should see three containers running: <kbd>timescale</kbd>, <kbd>mosquitto</kbd>, and <kbd>mqtt-processor</kbd>.</p>
+
+      <h3>6.4 View the microservice logs</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose logs -f mqtt-processor</code></pre>
+      </div>
+      <p><strong>Expected output:</strong></p>
+      <ul>
+        <li>Waiting for services to start...</code></li>
+        <li>Connected to database AgriPVDB</code></li>
+        <li>Microservice started</code></li>
+        <li>Connected to MQTT broker mosquitto</code></li>
+        <li>Subscribed to all agripv/# topics</code></li>
+      </ul>
+      <p><em>Press Ctrl+C to exit the log view.</em></p>
+
+    </div>
+
+    <h2 id="db">7. Creating Tables in TimescaleDB</h2>
+    <button type="button" class="collapsible">Show Database Setup</button>
+    <div class="content">
+
+      <h3>7.1 Connect to TimescaleDB</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose exec timescaledb psql -U saiamc -d AgriPVDB</code></pre>
+      </div>
+      <p>You will see the prompt: <kbd>AgriPVDB=#</kbd></p>
+
+      <h3>7.2 Create the complete schema</h3>
+      <p>Copy and paste this full SQL script into the <kbd>AgriPVDB=#</kbd> prompt and press Enter:</p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>-- Enable TimescaleDB
+CREATE EXTENSION IF NOT EXISTS timescaledb;
+
+-- Relational tables
+CREATE TABLE device (
+  device_id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  device_name            TEXT,
+  device_type            TEXT,
+  location               TEXT,
+  communication_protocol TEXT,
+  hardware_config        JSONB,
+  installation_date      TIMESTAMP,
+  last_maintenance       TIMESTAMP,
+  status                 TEXT,
+  battery_level          FLOAT,
+  last_heartbeat         TIMESTAMP
+);
+
+CREATE TABLE sensor (
+  sensor_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  device_id          UUID REFERENCES device(device_id),
+  sensor_type        TEXT,
+  measurement_unit   TEXT,
+  min_range          FLOAT,
+  max_range          FLOAT,
+  calibration_factor FLOAT,
+  calibration_curve  JSONB,
+  hardware_status    TEXT,
+  last_calibration   TIMESTAMP
+);
+
+-- Time-series tables (using snake_case)
+CREATE TABLE raw_sensor_data (
+  data_id          UUID DEFAULT gen_random_uuid(),
+  sensor_id        UUID REFERENCES sensor(sensor_id),
+  raw_value        FLOAT,
+  corrected_value  FLOAT,
+  acquisition_time TIMESTAMP NOT NULL,
+  data_quality     TEXT,
+  validation_flags JSONB,
+  error_codes      TEXT,
+  received_time    TIMESTAMP
+);
+
+SELECT create_hypertable('raw_sensor_data', 'acquisition_time');
+
+CREATE TABLE hardware_error (
+  error_id          UUID DEFAULT gen_random_uuid(),
+  device_id         UUID REFERENCES device(device_id),
+  sensor_id         UUID REFERENCES sensor(sensor_id),
+  error_type        TEXT,
+  error_severity    TEXT,
+  error_description TEXT,
+  error_context     JSONB,
+  error_time        TIMESTAMP NOT NULL,
+  recovery_action   TEXT,
+  resolved_time     TIMESTAMP,
+  resolution_status TEXT
+);
+
+SELECT create_hypertable('hardware_error', 'error_time');</code></pre>
+      </div>
+
+      <h3>7.3 Verify tables were created</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>\dt</code></pre>
+      </div>
+      <p>You should see: <kbd>device</kbd>, <kbd>sensor</kbd>, <kbd>raw_sensor_data</kbd>, <kbd>hardware_error</kbd>.</p>
+
+      <h3>7.4 Verify hypertables</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>SELECT * FROM timescaledb_information.hypertables;</code></pre>
+      </div>
+
+      <h3>7.5 Exit psql</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>\q</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="testdata">8. Inserting Test Data</h2>
+    <button type="button" class="collapsible">Show Test Data Insertion</button>
+    <div class="content">
+
+      <h3>8.1 Generate UUIDs</h3>
+      <p>You need valid UUIDs for device and sensor. Generate them:</p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>uuidgen</code></pre>
+      </div>
+      <p>Run this twice to get two UUIDs. Example outputs:</p>
+      <ul>
+        <li>Device UUID: 363c9234-3df8-4166-bb86-3814b5b938e6</code></li>
+        <li>Sensor UUID: 59d19b0d-d744-4a9c-ad7d-33b68eb6b028</code></li>
+      </ul>
+
+      <div class="important">
+        <strong>Important:</strong> UUIDs must be in the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>. Short strings like "d1" or "s1" will cause errors.
+      </div>
+
+      <h3>8.2 Connect to database</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose exec timescaledb psql -U saiamc -d AgriPVDB</code></pre>
+      </div>
+
+      <h3>8.3 Insert a test device</h3>
+      <p>Replace the UUID with yours if different:</p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>INSERT INTO device (device_id, device_name, device_type, location, status)
+VALUES ('363c9234-3df8-4166-bb86-3814b5b938e6', 'Device Test 001', 'weather_station', 'Field A', 'online');</code></pre>
+      </div>
+
+      <h3>8.4 Insert a test sensor</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>INSERT INTO sensor (sensor_id, device_id, sensor_type, measurement_unit, hardware_status)
+VALUES ('59d19b0d-d744-4a9c-ad7d-33b68eb6b028', '363c9234-3df8-4166-bb86-3814b5b938e6', 'temperature', 'celsius', 'operational');</code></pre>
+      </div>
+
+      <h3>8.5 Verify insertions</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>SELECT * FROM device;
+SELECT * FROM sensor;</code></pre>
+      </div>
+
+      <h3>8.6 Exit psql</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>\q</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="testsystem">9. Testing the Complete System</h2>
+    <button type="button" class="collapsible">Show System Testing</button>
+    <div class="content">
+
+      <div class="important">
+        <strong>Critical:</strong> JSON keys in MQTT messages <strong>must use snake_case</strong> (e.g., sensor_id</code>, raw_value</code>) to match what the Python script expects.
+      </div>
+
+      <h3>9.1 Open logs in one terminal</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose logs -f mqtt-processor</code></pre>
+      </div>
+
+      <h3>9.2 Publish an MQTT message (in a second terminal)</h3>
+      <p>Use your actual UUIDs:</p>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>mosquitto_pub -h localhost \
+-t agripv/devices/363c9234-3df8-4166-bb86-3814b5b938e6/sensors/59d19b0d-d744-4a9c-ad7d-33b68eb6b028/raw \
+-m '{
+  "sensor_id": "59d19b0d-d744-4a9c-ad7d-33b68eb6b028",
+  "raw_value": 25.5,
+  "corrected_value": 25.3,
+  "data_quality": "good",
+  "validation_flags": {"calibrated": true}
+}'</code></pre>
+      </div>
+
+      <h3>9.3 Check logs for success</h3>
+      <p><strong>Expected output in logs:</strong></p>
+      <pre>Message received on agripv/devices/.../sensors/.../raw
+Inserted sensor data for 59d19b0d-d744-4a9c-ad7d-33b68eb6b028</code></pre>
+
+      <div class="warning">
+        <strong>If you see "Inserted sensor data for None":</strong> Your JSON keys are wrong. Ensure you are using sensor_id</code> (with underscore), not sensorid</code> or sensorId</code>.
+      </div>
+
+      <h3>9.4 Verify data in database</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose exec timescaledb psql -U saiamc -d AgriPVDB -c "SELECT sensor_id, raw_value, corrected_value, received_time FROM raw_sensor_data ORDER BY received_time DESC LIMIT 5;"</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="advanced">10. Additional Tests</h2>
+    <button type="button" class="collapsible">Show Additional Tests</button>
+    <div class="content">
+
+      <div class="warning">
+        <strong>Note:</strong> The following tests send messages that the current Python script will <strong>receive but not process</strong>. They are provided for future extension. You will see Message received on ...</code> in logs but no database insertion.
+      </div>
+
+      <h3>10.1 Heartbeat test</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>mosquitto_pub -h localhost \
+-t agripv/devices/363c9234-3df8-4166-bb86-3814b5b938e6/heartbeat \
+-m '{"battery_level": 87.5}'</code></pre>
+      </div>
+
+      <h3>10.2 Hardware error test</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>mosquitto_pub -h localhost \
+-t agripv/devices/363c9234-3df8-4166-bb86-3814b5b938e6/sensors/59d19b0d-d744-4a9c-ad7d-33b68eb6b028/error \
+-m '{
+  "device_id": "363c9234-3df8-4166-bb86-3814b5b938e6",
+  "sensor_id": "59d19b0d-d744-4a9c-ad7d-33b68eb6b028",
+  "error_type": "calibration_drift",
+  "error_severity": "high",
+  "error_description": "Sensor reading out of expected range",
+  "error_context": {"expected_range": [20, 30], "actual": 45}
+}'</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="commands">11. Useful Commands</h2>
+    <button type="button" class="collapsible">Show Command Reference</button>
+    <div class="content">
+
+      <h3>11.1 Service Management</h3>
+
+      <h4>Stop all services</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+sudo docker compose down</code></pre>
+      </div>
+
+      <h4>Restart all services</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+sudo docker compose up -d</code></pre>
+      </div>
+
+      <h4>Rebuild and restart after code changes</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+sudo docker compose up -d --build mqtt-processor</code></pre>
+      </div>
+
+      <h4>View all logs</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo docker compose logs -f</code></pre>
+      </div>
+
+      <h4>Complete reset (WARNING: deletes all data!)</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+sudo docker compose down -v</code></pre>
+      </div>
+
+      <h3>11.2 Final Project Structure</h3>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>~/agri-db/
+├── docker-compose.yml
+├── mosquitto/
+│   ├── config/
+│   │   └── mosquitto.conf
+│   ├── data/
+│   └── log/
+└── mqtt-processor/
+    ├── Dockerfile
+    ├── requirements.txt
+    └── processor.py</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="topics">12. MQTT Topics Organization</h2>
+    <p>Topics follow the pattern: agripv/devices/{device_id}/...</code></p>
+    <ul>
+      <li><strong>agripv/devices/{device_id}/status</strong> – Device status</li>
+      <li><strong>agripv/devices/{device_id}/heartbeat</strong> – Heartbeat/battery info</li>
+      <li><strong>agripv/devices/{device_id}/sensors/{sensor_id}/raw</strong> – Raw sensor data <em>(currently processed)</em></li>
+      <li><strong>agripv/devices/{device_id}/sensors/{sensor_id}/error</strong> – Hardware errors</li>
+      <li><strong>agripv/system/health</strong> – System health status</li>
+    </ul>
+
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    <button type="button" class="collapsible">Show Troubleshooting Steps</button>
+    <div class="content">
+
+      <h3>Common Mistakes</h3>
+
+      <h4>"Inserted sensor data for None"</h4>
+      <ul>
+        <li><strong>Cause:</strong> JSON keys in your MQTT message don't match what Python expects.</li>
+        <li><strong>Solution:</strong> Use snake_case keys: sensor_id</code>, raw_value</code>, corrected_value</code>, etc.</li>
+      </ul>
+
+      <h4>"invalid input syntax for type uuid"</h4>
+      <ul>
+        <li><strong>Cause:</strong> You used a short string like "s1" instead of a valid UUID.</li>
+        <li><strong>Solution:</strong> Use uuidgen</code> to create proper UUIDs (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>).</li>
+      </ul>
+
+      <h4>"relation 'rawsensordata' does not exist"</h4>
+      <ul>
+        <li><strong>Cause:</strong> Table name mismatch. The SQL uses raw_sensor_data</code> but Python uses rawsensordata</code>.</li>
+        <li><strong>Solution:</strong> Ensure your processor.py</code> uses raw_sensor_data</code> (with underscores). Then rebuild:
+          <div class="code-block-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>cd ~/agri-db
+sudo docker compose up -d --build mqtt-processor</code></pre>
+          </div>
+        </li>
+      </ul>
+
+      <h4>Code changes not taking effect</h4>
+      <ul>
+        <li><strong>Cause:</strong> Docker uses a cached image with old code.</li>
+        <li><strong>Solution:</strong> Always rebuild after editing processor.py</code>:
+          <div class="code-block-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>cd ~/agri-db
+sudo docker compose up -d --build mqtt-processor</code></pre>
+          </div>
+        </li>
+      </ul>
+
+      <h3>Other Issues</h3>
+
+      <h4>Logs not displaying</h4>
+      <ul>
+        <li><strong>Cause:</strong> Python buffering stdout.</li>
+        <li><strong>Solution:</strong> Ensure Dockerfile uses python -u</code> and all print()</code> statements have flush=True</code>.</li>
+      </ul>
+
+      <h4>Container restarts in a loop</h4>
+      <ul>
+        <li><strong>Diagnostic:</strong>
+          <div class="code-block-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>sudo docker compose logs mqtt-processor --tail 50</code></pre>
+          </div>
+        </li>
+        <li><strong>Possible causes:</strong>
+          <ul>
+            <li>Database not ready yet (normal on first boot, wait 10-15 seconds)</li>
+            <li>Wrong environment variables in docker-compose.yml</code></li>
+            <li>Syntax error in processor.py</code></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Complete reset and fresh start</h4>
+      <div class="code-block-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd ~/agri-db
+sudo docker compose down -v
+sudo docker compose up -d
+# Wait 15 seconds, then run the SQL schema from Section 7.2</code></pre>
+      </div>
+
+    </div>
+
+    <h2 id="conclusion">Conclusion</h2>
+    <p>
+      This system provides a robust, modern stack for energy/agricultural IoT: data acquisition, processing, and real-time analytics.
+      Docker simplifies deployment and maintenance; TimescaleDB offers high-performance time-series analytics.
+    </p>
+    <p>
+      <strong>Remember:</strong> Consistency is key. Always use snake_case</code> for table names, column names, and JSON keys throughout the entire system.
+    </p>
+  </main>
+
+  <footer>
+    &copy; 2025 IoT Energy AgriPV Guide. Modern HTML technical manual generated for optimal reading, learning, and reuse.
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const codeBlock = btn.nextElementSibling;
+      const text = codeBlock.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+      });
+    }
+
+    document.querySelectorAll('.collapsible').forEach(btn => {
+      btn.addEventListener('click', function () {
+        this.classList.toggle('active');
+        let content = this.nextElementSibling;
+        content.classList.toggle('open');
+      });
+    });
+
+    const navLinks = document.querySelectorAll('nav a');
+    const mainSections = document.querySelectorAll('main > h2');
+    window.addEventListener('scroll', () => {
+      let fromTop = window.scrollY + 65;
+      mainSections.forEach((sec, idx) => {
+        if (sec.offsetTop <= fromTop && sec.offsetTop + sec.offsetHeight > fromTop) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          if (navLinks[idx]) navLinks[idx].classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
