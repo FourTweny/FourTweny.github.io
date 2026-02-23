@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dissolved Oxygen in Hydroponics & Agrivoltaics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+}
+header {
+    padding: 40px;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+}
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+h2 {
+    border-left: 5px solid #4caf50;
+    padding-left: 10px;
+}
+section {
+    padding: 40px;
+    max-width: 1100px;
+    margin: auto;
+}
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: rgba(76,175,80,0.3);
+}
+footer {
+    text-align: center;
+    padding: 30px;
+    background: rgba(0,0,0,0.4);
+}
+.highlight {
+    color: #4caf50;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Dissolved Oxygen in Hydroponics & Agrivoltaics</h1>
+<p>Internal Engineering Infographic</p>
+<p><strong>Prepared by:</strong> Jiyaad – Agrivoltaics IoT & Embedded Systems</p>
+</header>
+
+<section>
+<h2>1. Why Dissolved Oxygen Matters</h2>
+<div class="card">
+<p>Dissolved Oxygen (DO) is critical for root respiration. Roots require oxygen for aerobic metabolism, ATP production, nutrient uptake, and disease resistance. Insufficient DO leads to hypoxia, reduced nutrient absorption, and root rot.</p>
+<p><span class="highlight">Optimal Hydroponic Range:</span> 6–9 mg/L</p>
+</div>
+</section>
+
+<section>
+<h2>2. DO Risk Levels</h2>
+<div class="card">
+<table>
+<tr><th>DO (mg/L)</th><th>Condition</th></tr>
+<tr><td>> 8</td><td>Excellent</td></tr>
+<tr><td>6–8</td><td>Optimal</td></tr>
+<tr><td>4–6</td><td>Marginal</td></tr>
+<tr><td>< 4</td><td>Dangerous</td></tr>
+<tr><td>< 2</td><td>Severe Hypoxia</td></tr>
+</table>
+</div>
+</section>
+
+<section>
+<h2>3. Temperature vs Oxygen Solubility</h2>
+<div class="card">
+<canvas id="doChart"></canvas>
+<p>Oxygen solubility decreases as temperature increases. Agrivoltaic shading affects nutrient temperature and therefore DO availability.</p>
+</div>
+</section>
+
+<section>
+<h2>4. Agrivoltaic System Impacts</h2>
+<div class="grid">
+<div class="card">
+<h3>PV Shading</h3>
+<p>Reduces solar heating → Potentially increases oxygen solubility.</p>
+</div>
+<div class="card">
+<h3>Microclimate</h3>
+<p>Higher humidity and altered airflow influence nutrient temperature stability.</p>
+</div>
+<div class="card">
+<h3>Dynamic Shading</h3>
+<p>Diurnal radiation shifts may create DO oscillations.</p>
+</div>
+</div>
+</section>
+
+<section>
+<h2>5. Sensor Requirements for R&D</h2>
+<div class="card">
+<ul>
+<li><strong>Type:</strong> Optical (Luminescent)</li>
+<li><strong>Range:</strong> 0–20 mg/L</li>
+<li><strong>Accuracy:</strong> ±0.1–0.3 mg/L</li>
+<li><strong>Resolution:</strong> 0.01 mg/L</li>
+<li><strong>Compensation:</strong> Temperature (mandatory), Salinity (preferred)</li>
+<li><strong>Output:</strong> RS485 (Modbus RTU) preferred for ESP32 integration</li>
+</ul>
+</div>
+</section>
+
+<section>
+<h2>6. Under R4000 Sensor Strategy</h2>
+<div class="card">
+<p><strong>Recommended Architecture:</strong></p>
+<ul>
+<li>Optical DO probe (RS485)</li>
+<li>ESP32 microcontroller</li>
+<li>MAX485 transceiver module</li>
+<li>12V regulated supply</li>
+<li>LoRa transmission layer</li>
+</ul>
+<p>Expected real-world accuracy in this budget: ±0.3 mg/L</p>
+</div>
+</section>
+
+<section>
+<h2>7. Monitoring Strategy</h2>
+<div class="card">
+<ul>
+<li>Log DO + Temperature + EC + pH + PAR</li>
+<li>Sampling interval: 1–5 minutes</li>
+<li>Install in flowing section (avoid dead zones)</li>
+<li>Regular cleaning to prevent biofouling</li>
+</ul>
+</div>
+</section>
+
+<footer>
+<p>Agrivoltaics Research & Embedded Monitoring System</p>
+<p>University Engineering Internal Use</p>
+</footer>
+
+<script>
+const ctx = document.getElementById('doChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['15°C', '20°C', '25°C', '30°C'],
+        datasets: [{
+            label: 'Saturation DO (mg/L)',
+            data: [10.1, 9.1, 8.3, 7.6],
+            borderColor: '#4caf50',
+            backgroundColor: 'rgba(76,175,80,0.2)',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: { color: '#ffffff' }
+            }
+        },
+        scales: {
+            x: { ticks: { color: '#ffffff' } },
+            y: { ticks: { color: '#ffffff' } }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
