@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work — Peeko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav__brand">
+      <span class="dot"></span>
+      PEEKO
+      <span class="nav__coord">C—03</span>
+    </a>
+    <button class="nav__toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav__links').classList.toggle('is-open')">≡</button>
+    <div class="nav__links">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="about.html" class="nav__link">About</a>
+      <a href="work.html" class="nav__link nav__link--active">Work</a>
+      <a href="contact.html" class="nav__link">Contact</a>
+    </div>
+  </nav>
+
+  <div class="coords-top" aria-hidden="true">
+    <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span>
+  </div>
+  <div class="coords-side" aria-hidden="true">
+    <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+  </div>
+
+  <main class="page">
+    <div class="page__header rise">
+      <div class="page__kicker">Section 03 · Portfolio Index</div>
+      <h1 class="page__title">Selected<br>Work</h1>
+    </div>
+
+    <div class="filters rise rise-delay-1">
+      <button class="filter-btn filter-btn--active" data-filter="all">All · <span id="count">13</span></button>
+      <button class="filter-btn" data-filter="illustration">Illustration</button>
+      <button class="filter-btn" data-filter="campaigns">Campaigns</button>
+      <button class="filter-btn" data-filter="branding">Branding</button>
+      <button class="filter-btn" data-filter="layout">Layout</button>
+      <button class="filter-btn" data-filter="photography">Photography</button>
+    </div>
+
+    <section class="gallery" id="gallery">
+      <!-- Illustration -->
+      <div class="gallery__item" data-cat="illustration" data-idx="0" id="illustration">
+        <img src="images/page_05.jpg" alt="Zoo Bar illustration storyboard" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">ILLUSTRATION</span>
+          <span class="gallery__tag">STORYBOARD</span>
+        </div>
+        <div class="gallery__label">Zoo — Revive Your Inner Child</div>
+      </div>
+      <div class="gallery__item" data-cat="illustration" data-idx="1">
+        <img src="images/page_06.jpg" alt="Character illustrations" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">ILLUSTRATION</span>
+          <span class="gallery__tag">CHARACTERS</span>
+        </div>
+        <div class="gallery__label">Character Studies</div>
+      </div>
+
+      <!-- Campaigns -->
+      <div class="gallery__item" data-cat="campaigns" data-idx="2" id="campaigns">
+        <img src="images/page_08.jpg" alt="End Dog Fighting campaign posters" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">CAMPAIGN</span>
+          <span class="gallery__tag">POSTERS</span>
+        </div>
+        <div class="gallery__label">End Dog Fighting — Poster Series</div>
+      </div>
+      <div class="gallery__item" data-cat="campaigns" data-idx="3">
+        <img src="images/page_09.jpg" alt="Campaign social media rollout" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">CAMPAIGN</span>
+          <span class="gallery__tag">SOCIAL</span>
+        </div>
+        <div class="gallery__label">Myth vs. Reality — Social Rollout</div>
+      </div>
+      <div class="gallery__item" data-cat="campaigns" data-idx="4">
+        <img src="images/page_10.jpg" alt="Feed Hope bowl advertisement" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">CAMPAIGN</span>
+          <span class="gallery__tag">KEY ART</span>
+        </div>
+        <div class="gallery__label">Feed Hope One Bowl At A Time</div>
+      </div>
+      <div class="gallery__item" data-cat="campaigns" data-idx="5">
+        <img src="images/page_11.jpg" alt="Culture Corner mobile app" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">CAMPAIGN</span>
+          <span class="gallery__tag">UI/UX</span>
+        </div>
+        <div class="gallery__label">Culture Corner — Mobile App</div>
+      </div>
+
+      <!-- Branding -->
+      <div class="gallery__item" data-cat="branding" data-idx="6" id="branding">
+        <img src="images/page_13.jpg" alt="IQOQO social media identity" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">BRANDING</span>
+          <span class="gallery__tag">SOCIAL</span>
+        </div>
+        <div class="gallery__label">IQOQO — Social Identity</div>
+      </div>
+      <div class="gallery__item" data-cat="branding" data-idx="7">
+        <img src="images/page_14.jpg" alt="IQOQO podcast branding" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">BRANDING</span>
+          <span class="gallery__tag">PODCAST</span>
+        </div>
+        <div class="gallery__label">IQOQO's Connections — Podcast</div>
+      </div>
+      <div class="gallery__item" data-cat="branding" data-idx="8">
+        <img src="images/page_15.jpg" alt="IQOQO exhibition booth" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">BRANDING</span>
+          <span class="gallery__tag">EXHIBITION</span>
+        </div>
+        <div class="gallery__label">IQOQO — Trade Booth</div>
+      </div>
+      <div class="gallery__item" data-cat="branding" data-idx="9">
+        <img src="images/page_16.jpg" alt="IQOQO cultural performance billboard" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">BRANDING</span>
+          <span class="gallery__tag">OUTDOOR</span>
+        </div>
+        <div class="gallery__label">A Cultural Performance — Billboard</div>
+      </div>
+
+      <!-- Layout -->
+      <div class="gallery__item" data-cat="layout" data-idx="10" id="layout">
+        <img src="images/page_18.jpg" alt="eKuqonda Umzili magazine cover" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">LAYOUT</span>
+          <span class="gallery__tag">MAGAZINE</span>
+        </div>
+        <div class="gallery__label">eKuqonda Umzili — Issue One</div>
+      </div>
+      <div class="gallery__item" data-cat="layout" data-idx="11">
+        <img src="images/page_19.jpg" alt="Magazine editorial spread" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">LAYOUT</span>
+          <span class="gallery__tag">EDITORIAL</span>
+        </div>
+        <div class="gallery__label">Jordan Metcalf — Editorial Spread</div>
+      </div>
+
+      <!-- Photography -->
+      <div class="gallery__item" data-cat="photography" data-idx="12" id="photography">
+        <img src="images/page_21.jpg" alt="Photography: The Tree film poster, portraits, and product" loading="lazy">
+        <div class="gallery__meta">
+          <span class="gallery__tag gallery__tag--accent">PHOTOGRAPHY</span>
+          <span class="gallery__tag">MIXED</span>
+        </div>
+        <div class="gallery__label">The Tree · Portraits · Product</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" aria-label="Close">×</button>
+    <button class="lightbox__nav lightbox__prev" aria-label="Previous">‹</button>
+    <img class="lightbox__img" src="" alt="">
+    <button class="lightbox__nav lightbox__next" aria-label="Next">›</button>
+    <div class="lightbox__counter"><span id="lb-cur">1</span> / <span id="lb-total">13</span></div>
+  </div>
+
+  <footer class="footer-marker">
+    <span>© 2025 PEEKO · ISA SMITH</span>
+    <span>BLUEPRINT REV.01 · CAPE TOWN</span>
+    <span>designbypeeko@gmail.com</span>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

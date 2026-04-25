@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Peeko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav__brand">
+      <span class="dot"></span>
+      PEEKO
+      <span class="nav__coord">B—02</span>
+    </a>
+    <button class="nav__toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav__links').classList.toggle('is-open')">≡</button>
+    <div class="nav__links">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="about.html" class="nav__link nav__link--active">About</a>
+      <a href="work.html" class="nav__link">Work</a>
+      <a href="contact.html" class="nav__link">Contact</a>
+    </div>
+  </nav>
+
+  <div class="coords-top" aria-hidden="true">
+    <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span>
+  </div>
+  <div class="coords-side" aria-hidden="true">
+    <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+  </div>
+
+  <main class="page">
+    <div class="page__header rise">
+      <div class="page__kicker">Section 02 · Profile</div>
+    </div>
+
+    <section class="about">
+      <div class="about__content rise rise-delay-1">
+        <h1 class="about__title">What's<br>Up</h1>
+        <div class="about__bio">
+          <p>I'm <strong>Isa Smith</strong>, also known as <strong>Peeko</strong>, an aspiring graphic designer and illustrator based in Cape Town. My design style is inspired by the cartoons and animations I grew up watching, blending playful creativity with a modern touch.</p>
+          <p>I'm versatile and passionate about creating unique visuals, from branding to custom illustrations and motion graphics. I thrive on new challenges and am always exploring ways to grow and innovate.</p>
+          <p class="cta">Let's turn ideas into something remarkable!</p>
+        </div>
+      </div>
+      <div class="about__mascot rise rise-delay-2">
+        <img src="images/peeko_mascot.png" alt="Peeko mascot — 3D character in overalls">
+      </div>
+    </section>
+
+    <section class="skills rise rise-delay-3">
+      <div class="skills__header">
+        <h2>Toolkit</h2>
+        <small>Section 02.2 · Proficiency Index</small>
+      </div>
+      <div class="skills__grid">
+        <div class="skill">
+          <div class="skill__num">01</div>
+          <div class="skill__code">AI</div>
+          <div class="skill__name">Illustrator</div>
+          <div class="skill__dots" data-rating="10">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill__num">02</div>
+          <div class="skill__code">PS</div>
+          <div class="skill__name">Photoshop</div>
+          <div class="skill__dots">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot skill__dot--empty"></span>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill__num">03</div>
+          <div class="skill__code">ID</div>
+          <div class="skill__name">InDesign</div>
+          <div class="skill__dots">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill__num">04</div>
+          <div class="skill__code">AE</div>
+          <div class="skill__name">After Effects</div>
+          <div class="skill__dots">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill__num">05</div>
+          <div class="skill__code">PR</div>
+          <div class="skill__name">Premiere Pro</div>
+          <div class="skill__dots">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span>
+          </div>
+        </div>
+        <div class="skill">
+          <div class="skill__num">06</div>
+          <div class="skill__code">3D</div>
+          <div class="skill__name">Blender</div>
+          <div class="skill__dots">
+            <span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span><span class="skill__dot"></span>
+          </div>
+          <div class="skill__dots" style="margin-top:6px">
+            <span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span><span class="skill__dot skill__dot--empty"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-marker">
+    <span>© 2025 PEEKO · ISA SMITH</span>
+    <span>BLUEPRINT REV.01 · CAPE TOWN</span>
+    <span>designbypeeko@gmail.com</span>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Peeko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav__brand">
+      <span class="dot"></span>
+      PEEKO
+      <span class="nav__coord">E—06</span>
+    </a>
+    <button class="nav__toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav__links').classList.toggle('is-open')">≡</button>
+    <div class="nav__links">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="about.html" class="nav__link">About</a>
+      <a href="work.html" class="nav__link">Work</a>
+      <a href="contact.html" class="nav__link nav__link--active">Contact</a>
+    </div>
+  </nav>
+
+  <div class="coords-top" aria-hidden="true">
+    <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span>
+  </div>
+  <div class="coords-side" aria-hidden="true">
+    <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+  </div>
+
+  <main class="page">
+    <div class="page__header rise">
+      <div class="page__kicker">Section 04 · Let's Connect</div>
+    </div>
+
+    <section class="contact">
+      <h1 class="contact__title rise rise-delay-1">Contact<br>Me</h1>
+
+      <div class="contact__list rise rise-delay-2">
+        <a href="tel:+27626893732" class="contact__item">
+          <span class="contact__icon" aria-hidden="true">TEL</span>
+          <span>+27 62 689 3732</span>
+        </a>
+        <a href="mailto:designbypeeko@gmail.com" class="contact__item">
+          <span class="contact__icon" aria-hidden="true">EML</span>
+          <span>designbypeeko@<strong>gmail.com</strong></span>
+        </a>
+        <a href="https://www.behance.net/isasmith1" target="_blank" rel="noopener" class="contact__item">
+          <span class="contact__icon" aria-hidden="true">Bē</span>
+          <span>Isa Smith / <strong>isasmith1</strong></span>
+        </a>
+        <a href="https://www.linkedin.com/in/isa-smith" target="_blank" rel="noopener" class="contact__item">
+          <span class="contact__icon" aria-hidden="true">in</span>
+          <span>Isa <strong>Smith</strong></span>
+        </a>
+      </div>
+
+      <div class="mascots rise rise-delay-3" aria-hidden="true">
+        <img src="images/mascot1.png" alt="">
+        <img src="images/mascot2.png" alt="">
+        <img src="images/mascot3.png" alt="">
+        <img src="images/mascot4.png" alt="">
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-marker">
+    <span>© 2025 PEEKO · ISA SMITH</span>
+    <span>BLUEPRINT REV.01 · CAPE TOWN</span>
+    <span>Ready when you are.</span>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
